@@ -3,21 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (email && password) {
-      setIsLoggedIn(true); // marque l'utilisateur comme connecté
-      // Optionnel : stocker dans localStorage si "Garder moi connecté"
-      if (remember) localStorage.setItem("isLoggedIn", "true");
-      navigate("/"); // redirige vers Dashboard
-    } else {
-      alert("Veuillez remplir tous les champs");
+    // Connexion directe sans vérification
+    setIsLoggedIn(true);
+
+    if (remember) {
+      localStorage.setItem("isLoggedIn", "true");
     }
+
+    navigate("/"); // Redirection vers Dashboard
   };
 
   return (
@@ -28,17 +26,17 @@ function Login({ setIsLoggedIn }) {
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#2f3337", // fond sombre comme image 2
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* Titre principal */}
-      <h1 style={{ marginBottom: "5px", color: "#4caf50" }}>RED PRODUCT</h1>
-      <p style={{ marginBottom: "30px", color: "#555" }}>
+      <h1 style={{ marginBottom: "5px", color: "#ffffff", letterSpacing: "1px" }}>
+        RED PRODUCT
+      </h1>
+      <p style={{ marginBottom: "30px", color: "#cccccc" }}>
         Connectez-vous en tant qu'Admin
       </p>
 
-      {/* Formulaire */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -47,38 +45,34 @@ function Login({ setIsLoggedIn }) {
           gap: "15px",
           width: "350px",
           padding: "30px",
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+          backgroundColor: "#ffffff",
+          borderRadius: "4px",
+          boxShadow: "0 8px 25px rgba(0,0,0,0.4)",
         }}
       >
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
           style={{
             padding: "12px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{
-            padding: "12px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+            outline: "none",
           }}
         />
 
-        {/* Checkbox Garder moi connecté */}
-        <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <input
+          type="password"
+          placeholder="Mot de passe"
+          style={{
+            padding: "12px",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+            outline: "none",
+          }}
+        />
+
+        <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "14px" }}>
           <input
             type="checkbox"
             checked={remember}
@@ -87,15 +81,14 @@ function Login({ setIsLoggedIn }) {
           Garder moi connecté
         </label>
 
-        {/* Bouton Se connecter */}
         <button
           type="submit"
           style={{
             padding: "12px",
-            backgroundColor: "#4caf50",
-            color: "#fff",
+            backgroundColor: "#333333", // bouton sombre comme image
+            color: "#ffffff",
             border: "none",
-            borderRadius: "5px",
+            borderRadius: "4px",
             cursor: "pointer",
             fontWeight: "bold",
             marginTop: "10px",
@@ -104,20 +97,24 @@ function Login({ setIsLoggedIn }) {
           Se connecter
         </button>
 
-        {/* Liens et infos supplémentaires */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            alignItems: "center",
             fontSize: "14px",
             marginTop: "10px",
+            gap: "5px",
           }}
         >
-          <a href="#" style={{ color: "#4caf50", textDecoration: "none" }}>
+          <a href="#" style={{ color: "#f1c40f", textDecoration: "none" }}>
             Mot de passe oublié ?
           </a>
-          <span>
-            Vous n'avez pas de compte ? <a href="#" style={{ color: "#4caf50" }}>S'inscrire</a>
+          <span style={{ color: "#555" }}>
+            Vous n'avez pas de compte ?{" "}
+            <a href="#" style={{ color: "#f1c40f", textDecoration: "none" }}>
+              S'inscrire
+            </a>
           </span>
         </div>
       </form>

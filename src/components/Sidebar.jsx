@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaTachometerAlt, FaHotel } from "react-icons/fa";
 
 function Sidebar() {
   return (
@@ -11,17 +12,47 @@ function Sidebar() {
         height: "100vh",
       }}
     >
-      <h2>Principal</h2>
+      <h2 style={{ color: "#ffffff", marginBottom: "20px" }}>
+        Principal
+      </h2>
 
       <ul style={{ listStyle: "none", padding: 0 }}>
-        <li style={{ margin: "10px 0" }}>
-          <Link to="/" style={{ textDecoration: "none", color: "#f7efefff" }}>
+        <li style={{ marginBottom: "15px" }}>
+          <Link
+            to="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              backgroundColor: "#ffffff",
+              padding: "10px",
+              borderRadius: "5px",
+              textDecoration: "none",
+              color: "#333",
+              fontWeight: "bold",
+            }}
+          >
+            <FaTachometerAlt />
             Dashboard
           </Link>
         </li>
 
-        <li style={{ margin: "10px 0" }}>
-          <Link to="/hotels" style={{ textDecoration: "none", color: "#faf6f6ff" }}>
+        <li>
+          <Link
+            to="/hotels"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              backgroundColor: "#ffffff",
+              padding: "10px",
+              borderRadius: "5px",
+              textDecoration: "none",
+              color: "#333",
+              fontWeight: "bold",
+            }}
+          >
+            <FaHotel />
             Liste des hotels
           </Link>
         </li>
