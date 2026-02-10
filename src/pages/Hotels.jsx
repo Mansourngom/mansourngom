@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HotelCard from "../components/HotelCard";
 
 import hotel1 from "../assets/images/hotel1.jpg";
@@ -20,6 +20,19 @@ const hotelsData = [
 function Hotels() {
   const [hotels, setHotels] = useState(hotelsData);
   const [showForm, setShowForm] = useState(false);
+
+  // Bloquer scroll arrière-plan
+  useEffect(() => {
+    if (showForm) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, [showForm]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,20 +56,14 @@ function Hotels() {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">🏨 Liste des Hôtels</h1>
+      <h1 className="page-title">Liste des Hôtels</h1>
 
-      {/* Bouton Premium */}
       <div className="btn-container">
-        <button
-          className="premium-btn"
-          onClick={() => setShowForm(true)}
-        >
-          <span className="btn-icon">✦</span>
-          Créer un nouvel hôtel
+        <button className="add-btn" onClick={() => setShowForm(true)}>
+          Ajouter un hôtel
         </button>
       </div>
 
-      {/* Liste */}
       <div className="hotel-list">
         {hotels.map((hotel, index) => (
           <HotelCard
@@ -69,7 +76,6 @@ function Hotels() {
         ))}
       </div>
 
-      {/* Modal */}
       {showForm && (
         <div className="modal-overlay" onClick={() => setShowForm(false)}>
           <form
@@ -85,73 +91,97 @@ function Hotels() {
               ✕
             </button>
 
-            <h2>Ajouter un hôtel</h2>
+            <h2 className="form-title">Créer un nouvel hôtel</h2>
 
-            <input type="text" name="name" placeholder="Nom de l'hôtel" required />
-            <input type="text" name="address" placeholder="Adresse" required />
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="tel" name="phone" placeholder="Téléphone" required />
-            <input type="number" name="price" placeholder="Prix par nuit" required />
-            <input type="text" name="currency" placeholder="Devise (XOF, €...)" required />
-            <input type="file" name="image" accept="image/*" />
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Nom de l'hôtel</label>
+                <input type="text" name="name" required />
+              </div>
+
+              <div className="form-group">
+                <label>Adresse</label>
+                <input type="text" name="address" required />
+              </div>
+
+              <div className="form-group">
+                <label>Email</label>
+                <input type="email" name="email" required />
+              </div>
+
+              <div className="form-group">
+                <label>Téléphone</label>
+                <input type="tel" name="phone" required />
+              </div>
+
+              <div className="form-group">
+                <label>Prix par nuit</label>
+                <input type="number" name="price" required />
+              </div>
+
+              <div className="form-group">
+                <label>Devise</label>
+                <select name="currency" required>
+                  <option value="XOF">XOF</option>
+                  <option value="EUR">EUR</option>
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+            </div>
+
+            <label className="image-upload">
+              <input type="file" name="image" accept="image/*" hidden />
+              <div className="image-box">
+                📷 Cliquer pour ajouter une image
+              </div>
+            </label>
 
             <button type="submit" className="submit-btn">
-              Enregistrer
+              Enregistrer l'hôtel
             </button>
           </form>
         </div>
       )}
 
-      <style>
-        {`
-        body {
-          margin: 0;
+      <style>{`
+        body.modal-open {
+          overflow: hidden;
         }
 
         .page-container {
           padding: 30px;
           min-height: 100vh;
-          background: linear-gradient(135deg, #f5f7fa, #e4efe9);
+          background: #f4f6f9;
+          font-family: 'Segoe UI', sans-serif;
         }
 
         .page-title {
-          font-size: 28px;
-          font-weight: bold;
+          font-size: 26px;
+          font-weight: 600;
+          margin-bottom: 25px;
+          color: #1f2937;
         }
 
         .btn-container {
           display: flex;
           justify-content: flex-end;
-          margin: 30px 0;
+          margin-bottom: 25px;
         }
 
-        .premium-btn {
-          padding: 15px 35px;
-          font-size: 14px;
-          font-weight: bold;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          color: white;
+        .add-btn {
+          padding: 12px 22px;
           border: none;
-          border-radius: 50px;
+          background: linear-gradient(135deg, #2e7050, #1f4e3a);
+          color: white;
+          border-radius: 8px;
           cursor: pointer;
-          background: linear-gradient(270deg, #262b28, #253a30, #7f8e8a, #414c45);
-          background-size: 600% 600%;
-          animation: gradientMove 6s ease infinite;
-          box-shadow: 0 10px 30px rgba(0, 200, 83, 0.4);
-          transition: 0.4s;
-          display: flex;
-          align-items: center;
-          gap: 10px;
+          font-weight: 500;
+          transition: 0.3s ease;
         }
 
-        .premium-btn:hover {
-          transform: translateY(-5px) scale(1.05);
-          box-shadow: 0 20px 45px rgba(0, 200, 83, 0.6);
-        }
-
-        .btn-icon {
-          animation: pulse 2s infinite;
+        .add-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         .hotel-list {
@@ -160,93 +190,145 @@ function Hotels() {
           gap: 20px;
         }
 
+        /* PREMIUM OVERLAY */
         .modal-overlay {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
+          inset: 0;
+          background: rgba(17, 24, 39, 0.65);
           backdrop-filter: blur(6px);
-          background: rgba(0, 0, 0, 0.5);
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
           z-index: 1000;
-          animation: fadeIn 0.3s ease;
+          animation: overlayFade 0.3s ease forwards;
         }
 
-        .modal-form {
-          width: 420px;
-          padding: 30px;
-          border-radius: 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
-          background: rgba(255, 255, 255, 0.9);
-          box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-          animation: slideUp 0.3s ease;
-          position: relative;
-        }
-
-        .modal-form input {
-          padding: 10px;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          outline: none;
-        }
-
-        .modal-form input:focus {
-          border-color: #00c853;
-        }
-
-        .submit-btn {
-          padding: 12px;
-          border: none;
-          border-radius: 10px;
-          background: linear-gradient(135deg, #363e3a, #2e7050);
-          color: white;
-          font-weight: bold;
-          cursor: pointer;
-          transition: 0.3s;
-        }
-
-        .submit-btn:hover {
-          transform: scale(1.05);
-        }
-
-        .close-btn {
-          position: absolute;
-          top: 10px;
-          right: 15px;
-          background: transparent;
-          border: none;
-          font-size: 18px;
-          cursor: pointer;
-        }
-
-        @keyframes gradientMove {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.3); }
-          100% { transform: scale(1); }
-        }
-
-        @keyframes fadeIn {
+        @keyframes overlayFade {
           from { opacity: 0; }
           to { opacity: 1; }
         }
 
-        @keyframes slideUp {
-          from { transform: translateY(40px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
+        /* PREMIUM MODAL */
+        .modal-form {
+          width: 750px;
+          background: white;
+          padding: 35px;
+          border-radius: 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 25px;
+          position: relative;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+          animation: modalPop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        `}
-      </style>
+
+        @keyframes modalPop {
+          0% {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .form-title {
+          font-size: 22px;
+          font-weight: 600;
+          color: #111827;
+        }
+
+        .form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .form-group label {
+          font-size: 13px;
+          font-weight: 500;
+          color: #374151;
+        }
+
+        .form-group input,
+        .form-group select {
+          padding: 12px;
+          border-radius: 8px;
+          border: 1px solid #e5e7eb;
+          font-size: 14px;
+          transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+          outline: none;
+          border-color: #2e7050;
+          box-shadow: 0 0 0 3px rgba(46,112,80,0.15);
+        }
+
+        .image-box {
+          height: 140px;
+          border: 2px dashed #d1d5db;
+          border-radius: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f9fafb;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        .image-box:hover {
+          border-color: #2e7050;
+          background: #f0fdf4;
+        }
+
+        .submit-btn {
+          padding: 14px;
+          border: none;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #2e7050, #1f4e3a);
+          color: white;
+          cursor: pointer;
+          font-weight: 500;
+          transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 18px;
+          right: 18px;
+          background: #f3f4f6;
+          border: none;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+          .modal-form {
+            width: 95%;
+            padding: 20px;
+          }
+
+          .form-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 }
